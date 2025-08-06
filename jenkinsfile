@@ -1,0 +1,43 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('w/o docker') {
+            steps {
+                sh 'echo "without DOCKER"'
+            }
+        }
+        stage('w/docker') {
+            agent {
+                docker {
+                    image 'node:18-alpine'
+                    reuseNode true
+                }
+            }
+            steps {
+                sh '''
+                    echo 'with DOCKER'
+                    ls -la 
+                    node --version
+                    npm --version
+                    npm ci
+                    npm run build 
+                    ls -la
+                '''
+            }
+        }
+        stage('Testing-with-docker') {
+            agent {
+                docker {
+                    image 'node:18-alpine'
+                }
+            }
+            steps {
+                sh '''
+                    echo "with DOCKER"
+                    npm test
+                '''
+            }
+        }
+    }
+}
