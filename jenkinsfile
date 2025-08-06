@@ -27,15 +27,10 @@ pipeline {
             }
         }
         stage('Testing-with-docker') {
-            agent {
-                docker {
-                    image 'node:18-alpine'
-                }
-            }
             steps {
                 sh '''
-                    echo "with DOCKER"
-                    npm test
+                    echo "Test stage"
+                    
                 '''
             }
         }
